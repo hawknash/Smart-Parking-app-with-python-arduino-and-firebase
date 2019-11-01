@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     EditText Email, Password;
-    Button LogInButton, RegisterButton;
+    Button LogInButton, RegisterButton,forgot;
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthListner;
     FirebaseUser mUser;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
      //   ActionBar bar = getActionBar();
       //  bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0000ff")));
-
+        forgot=(Button)findViewById(R.id.forgot);
         LogInButton = (Button) findViewById(R.id.buttonLogin);
 
         RegisterButton = (Button) findViewById(R.id.buttonRegister);
@@ -73,26 +74,74 @@ public class MainActivity extends AppCompatActivity {
 
             }
         };
-        // LogInButton.setOnClickListener((View.OnClickListener) this);
-        //RegisterButton.setOnClickListener((View.OnClickListener) this);
-        //Adding click listener to log in button.
+
         LogInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                // Calling EditText is empty or no method.
+
                 userSign();
 
 
             }
         });
 
-        // Adding click listener to register button.
+
+        forgot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                mAuth = FirebaseAuth.getInstance();
+                final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+                progressDialog.setMessage("Verifying..");
+                progressDialog.show();
+
+                if (!TextUtils.isEmpty(Email.getText().toString())) {
+                    mAuth.sendPasswordResetEmail(Email.getText().toString())
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        progressDialog.dismiss();
+                                        Toast.makeText(getApplicationContext(), "Reset password instructions has sent to your email",
+                                                Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        progressDialog.dismiss();
+                                        Toast.makeText(getApplicationContext(),
+                                                "Email don't exist", Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(getApplicationContext(), "No such email exists!", Toast.LENGTH_SHORT).show();
+                        }
+
+
+
+                    });
+
+                }
+                else{
+                    progressDialog.dismiss();
+                    Toast.makeText(MainActivity.this,"Please enter the Email!",Toast.LENGTH_LONG).show();
+                }
+
+
+            }
+        });
+
+
+
+
         RegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                // Opening new user registration activity using intent on button click.
+
                 Intent intent = new Intent(MainActivity.this, register.class);
                 startActivity(intent);
 
@@ -104,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        //removeAuthSateListner is used  in onStart function just for checking purposes,it helps in logging you out.
+
         mAuth.removeAuthStateListener(mAuthListner);
 
     }
@@ -156,14 +205,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-    //This function helps in verifying whether the email is verified or not.
+
     private void checkIfEmailVerified(){
         FirebaseUser users=FirebaseAuth.getInstance().getCurrentUser();
         boolean emailVerified=users.isEmailVerified();
         if(!emailVerified){
             Toast.makeText(this,"Verify the Email Id",Toast.LENGTH_SHORT).show();
             mAuth.signOut();
-            finish();
+
         }
         else {
             Email.getText().clear();
@@ -171,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
             Password.getText().clear();
             Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
 
-            // Sending Email to Dashboard Activity using intent.
+
             intent.putExtra(userEmail,email);
 
             startActivity(intent);

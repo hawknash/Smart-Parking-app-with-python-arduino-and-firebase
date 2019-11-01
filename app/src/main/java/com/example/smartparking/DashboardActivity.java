@@ -57,13 +57,16 @@ public class DashboardActivity extends AppCompatActivity {
         s5=(Button)findViewById(R.id.button6);
 
 
-         DatabaseReference mDatabaseReference;
-         FirebaseDatabase mDatabase;
+         final DatabaseReference mDatabaseReference,r;
+         final FirebaseDatabase mDatabase,mD;
+
          FirebaseUser mUser;
          FirebaseAuth mAuth;
 
         mDatabase=FirebaseDatabase.getInstance();
         mDatabaseReference=mDatabase.getReference("python-example-f6d0b");
+        mD=FirebaseDatabase.getInstance();
+        r=mD.getReference("final");
         Log.d("naman", "User name: "  + ", email " + mDatabaseReference);
         mDatabaseReference.keepSynced(true);
 
@@ -141,10 +144,13 @@ public class DashboardActivity extends AppCompatActivity {
             }
             else
             {
+                mDatabaseReference.child("s0").setValue("255");
+                r.child("s0").setValue(1);
                 Intent intent = new Intent(DashboardActivity.this, slotActivity.class);
-                intent.putExtra("slot","slot 1");
+                intent.putExtra("slot",1);
 
                 startActivity(intent);
+                finish();
             }
 
         }
@@ -159,10 +165,13 @@ public class DashboardActivity extends AppCompatActivity {
                 }
                 else
                 {
+                    mDatabaseReference.child("s1").setValue("255");
+                    r.child("s1").setValue(1);
                     Intent intent = new Intent(DashboardActivity.this, slotActivity.class);
-                    intent.putExtra("slot","slot 2");
+                    intent.putExtra("slot",2);
 
                     startActivity(intent);
+                    finish();
                 }
 
             }
@@ -176,10 +185,13 @@ public class DashboardActivity extends AppCompatActivity {
                 }
                 else
                 {
+                    mDatabaseReference.child("s2").setValue("255");
+                    r.child("s2").setValue(1);
                     Intent intent = new Intent(DashboardActivity.this, slotActivity.class);
-                    intent.putExtra("slot","slot 3");
+                    intent.putExtra("slot",3);
 
                     startActivity(intent);
+                    finish();
                 }
 
             }
@@ -193,10 +205,13 @@ public class DashboardActivity extends AppCompatActivity {
                 }
                 else
                 {
+                    mDatabaseReference.child("s3").setValue("255");
+                    r.child("s3").setValue(1);
                     Intent intent = new Intent(DashboardActivity.this, slotActivity.class);
-                    intent.putExtra("slot","slot 4");
+                    intent.putExtra("slot",4);
 
                     startActivity(intent);
+                    finish();
                 }
 
             }
@@ -210,10 +225,13 @@ public class DashboardActivity extends AppCompatActivity {
                 }
                 else
                 {
+                    mDatabaseReference.child("s4").setValue("255");
+                    r.child("s4").setValue(1);
                     Intent intent = new Intent(DashboardActivity.this, slotActivity.class);
-                    intent.putExtra("slot","slot 5");
+                    intent.putExtra("slot",5);
 
                     startActivity(intent);
+                    finish();
                 }
 
             }
@@ -228,13 +246,17 @@ public class DashboardActivity extends AppCompatActivity {
                 }
                 else
                 {
+                    mDatabaseReference.child("s5").setValue("255");
+                    r.child("s5").setValue(1);
                     Intent intent = new Intent(DashboardActivity.this, slotActivity.class);
-                    intent.putExtra("slot","6");
+                    intent.putExtra("slot",6);
 
                     startActivity(intent);
+                    finish();
                 }
             }
         });
+
     }
 
 }

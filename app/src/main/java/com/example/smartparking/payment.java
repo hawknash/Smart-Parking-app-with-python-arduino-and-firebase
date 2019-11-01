@@ -5,8 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,6 +20,7 @@ public class payment extends AppCompatActivity {
     private TextView intime;
     private TextView outtime,payment,pay;
     long time,total,tpay;
+    private Button signout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +29,7 @@ public class payment extends AppCompatActivity {
         outtime=(TextView)findViewById(R.id.textView8);
         payment=(TextView)findViewById(R.id.textView9);
         pay=(TextView)findViewById(R.id.textView10);
+        signout=(Button)findViewById(R.id.signout);
 
         Intent intent = getIntent();
         String min= intent.getStringExtra("in");
@@ -45,7 +51,18 @@ public class payment extends AppCompatActivity {
         }
         pay.setText("Your Total Amount Is Rs."+tpay);
 
+        signout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth fAuth = FirebaseAuth.getInstance();
+                fAuth.signOut();
+                Intent intent = new Intent(payment.this, MainActivity.class);
 
+
+                startActivity(intent);
+                finish();
+            }
+        });
 
 
 

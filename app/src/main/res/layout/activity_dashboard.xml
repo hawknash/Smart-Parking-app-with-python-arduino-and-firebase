@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/a3"
     tools:context=".DashboardActivity">
 
     <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
+
 
         android:text="Slot 1"
 
@@ -28,8 +29,10 @@
         android:layout_height="wrap_content"
         android:text=" Slot Availablity"
         android:fontFamily="casual"
-    android:textSize="20sp"
+        android:textStyle="bold"
+    android:textSize="22sp"
         android:textAlignment="center"
+        android:textColor="@android:color/black"
         app:layout_constraintBottom_toTopOf="@+id/button1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.146"
@@ -137,6 +140,7 @@
         android:textSize="20sp"
         android:textAlignment="center"
         android:textColor="@android:color/black"
+        android:textStyle="bold"
         app:layout_constraintVertical_bias="0.455" />
 
 

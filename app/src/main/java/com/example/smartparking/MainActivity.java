@@ -3,12 +3,17 @@ package com.example.smartparking;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -36,7 +41,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+
+     //   ActionBar bar = getActionBar();
+      //  bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0000ff")));
+
         LogInButton = (Button) findViewById(R.id.buttonLogin);
 
         RegisterButton = (Button) findViewById(R.id.buttonRegister);
@@ -132,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
                 if (!task.isSuccessful()) {
                     dialog.dismiss();
 
-                    Toast.makeText(MainActivity.this, "Login not successfull", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Username/Password is not correct", Toast.LENGTH_SHORT).show();
 
                 } else {
                     dialog.dismiss();
@@ -163,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra(userEmail,email);
 
             startActivity(intent);
-
+            finish();
         }
     }
 

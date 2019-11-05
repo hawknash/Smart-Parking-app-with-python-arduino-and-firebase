@@ -20,7 +20,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginStart="60dp"
         android:layout_marginLeft="60dp"
-        android:layout_marginTop="56dp"
         android:fontFamily="casual"
         android:gravity="center"
         android:text="User Sign Up"
@@ -36,14 +35,14 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="36dp"
         android:ems="10"
         android:gravity="center"
         android:hint="Enter Name"
         android:inputType="textEmailAddress"
         android:textColor="#000"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/imageButton" />
 
     <EditText
         android:id="@+id/editEmail"
@@ -101,5 +100,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonRegister"
         app:layout_constraintVertical_bias="0.874" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="271dp"
+        android:layout_height="186dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:srcCompat="@tools:sample/avatars" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

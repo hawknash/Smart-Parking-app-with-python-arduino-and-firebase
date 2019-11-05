@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.hardware.Sensor;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -29,6 +30,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Locale;
+
 import static java.util.logging.Logger.global;
 
 public class DashboardActivity extends AppCompatActivity {
@@ -40,6 +43,8 @@ public class DashboardActivity extends AppCompatActivity {
     private Button s3;
     private Button s4;
     private Button s5;
+    private Button location;
+    TextToSpeech t1;
 
 
     private TextView textView;
@@ -60,9 +65,31 @@ public class DashboardActivity extends AppCompatActivity {
         s3=(Button)findViewById(R.id.button4);
         s4=(Button)findViewById(R.id.button5);
         s5=(Button)findViewById(R.id.button6);
+        location=(Button)findViewById(R.id.button8);
+
+        t1 = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int ttsLang = t1.setLanguage(Locale.US);
+
+                    if (ttsLang == TextToSpeech.LANG_MISSING_DATA
+                            || ttsLang == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("TTS", "The Language is not supported!");
+                    } else {
+                        Log.i("TTS", "Language Supported.");
+                    }
+                    Log.i("TTS", "Initialization success.");
+                } else {
+                    Toast.makeText(getApplicationContext(), "TTS Initialization failed!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        t1.setPitch(0.3f);
 
 
-         final DatabaseReference mDatabaseReference,r;
+        final DatabaseReference mDatabaseReference,r;
          final FirebaseDatabase mDatabase,mD;
 
          FirebaseUser mUser;
@@ -144,18 +171,40 @@ public class DashboardActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
 
+
             if(sl0==1){
                 Toast.makeText(DashboardActivity.this, "Sorry! The slot is filled.", Toast.LENGTH_SHORT).show();
             }
             else
             {
-                mDatabaseReference.child("s0").setValue("255");
-                r.child("s0").setValue(1);
-                Intent intent = new Intent(DashboardActivity.this, slotActivity.class);
-                intent.putExtra("slot",1);
+                String toSpeak="Welcome to smart Parking              You Are in slot 1";
+                t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
 
-                startActivity(intent);
-                finish();
+                new Thread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        try
+                        {
+                            Thread.sleep(2000);
+                            mDatabaseReference.child("s0").setValue("255");
+                            r.child("s0").setValue(1);
+                            Intent intent = new Intent(DashboardActivity.this, slotActivity.class);
+                            intent.putExtra("slot",1);
+
+                            startActivity(intent);
+                            finish();
+                        }
+                        catch (InterruptedException e)
+                        {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+
+
             }
 
         }
@@ -170,14 +219,49 @@ public class DashboardActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    mDatabaseReference.child("s1").setValue("255");
-                    r.child("s1").setValue(1);
-                    Intent intent = new Intent(DashboardActivity.this, slotActivity.class);
-                    intent.putExtra("slot",2);
+                    String toSpeak="Welcome to smart Parking You Are in slot 2";
+                    t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
 
-                    startActivity(intent);
-                    finish();
+                    new Thread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            try
+                            {
+                                Thread.sleep(2000);
+                                mDatabaseReference.child("s1").setValue("255");
+                                r.child("s1").setValue(1);
+                                Intent intent = new Intent(DashboardActivity.this, slotActivity.class);
+                                intent.putExtra("slot",2);
+
+                                startActivity(intent);
+                                finish();
+                            }
+                            catch (InterruptedException e)
+                            {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+
+
+
                 }
+
+            }
+        });
+
+        location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(DashboardActivity.this, MapsActivity.class);
+
+
+                startActivity(intent);
+                finish();
 
             }
         });
@@ -190,13 +274,34 @@ public class DashboardActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    mDatabaseReference.child("s2").setValue("255");
-                    r.child("s2").setValue(1);
-                    Intent intent = new Intent(DashboardActivity.this, slotActivity.class);
-                    intent.putExtra("slot",3);
+                    String toSpeak="Welcome to smart Parking You Are in slot 3";
+                    t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
 
-                    startActivity(intent);
-                    finish();
+                    new Thread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            try
+                            {
+                                Thread.sleep(2000);
+                                mDatabaseReference.child("s2").setValue("255");
+                                r.child("s2").setValue(1);
+                                Intent intent = new Intent(DashboardActivity.this, slotActivity.class);
+                                intent.putExtra("slot",3);
+
+                                startActivity(intent);
+                                finish();
+                            }
+                            catch (InterruptedException e)
+                            {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+
+
                 }
 
             }
@@ -210,33 +315,81 @@ public class DashboardActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    mDatabaseReference.child("s3").setValue("255");
-                    r.child("s3").setValue(1);
-                    Intent intent = new Intent(DashboardActivity.this, slotActivity.class);
-                    intent.putExtra("slot",4);
+                    String toSpeak="Welcome to smart Parking You Are in slot 4";
+                    t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
 
-                    startActivity(intent);
-                    finish();
+                    new Thread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            try
+                            {
+                                Thread.sleep(2000);
+                                mDatabaseReference.child("s3").setValue("255");
+                                r.child("s3").setValue(1);
+                                Intent intent = new Intent(DashboardActivity.this, slotActivity.class);
+                                intent.putExtra("slot",4);
+
+                                startActivity(intent);
+                                finish();
+                            }
+                            catch (InterruptedException e)
+                            {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+
                 }
 
             }
         });
 
+
         s4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 if(sl4==1){
                     Toast.makeText(DashboardActivity.this, "Sorry! The slot is filled.", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    mDatabaseReference.child("s4").setValue("255");
-                    r.child("s4").setValue(1);
-                    Intent intent = new Intent(DashboardActivity.this, slotActivity.class);
-                    intent.putExtra("slot",5);
 
-                    startActivity(intent);
-                    finish();
+                    String toSpeak="Welcome to smart Parking You Are in slot 5";
+                    t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+
+                    new Thread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            try
+                            {
+                                Thread.sleep(2000);
+                                mDatabaseReference.child("s4").setValue("255");
+                                r.child("s4").setValue(1);
+                                Intent intent = new Intent(DashboardActivity.this, slotActivity.class);
+                                intent.putExtra("slot",5);
+
+                                startActivity(intent);
+                                finish();
+
+                            }
+                            catch (InterruptedException e)
+                            {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+
+
+
+
                 }
 
             }
@@ -251,17 +404,48 @@ public class DashboardActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    mDatabaseReference.child("s5").setValue("255");
-                    r.child("s5").setValue(1);
-                    Intent intent = new Intent(DashboardActivity.this, slotActivity.class);
-                    intent.putExtra("slot",6);
+                    String toSpeak="Welcome to smart Parking You Are in slot 6";
+                    t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
 
-                    startActivity(intent);
-                    finish();
+                    new Thread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            try
+                            {
+                                Thread.sleep(2000);
+                                mDatabaseReference.child("s5").setValue("255");
+                                r.child("s5").setValue(1);
+                                Intent intent = new Intent(DashboardActivity.this, slotActivity.class);
+                                intent.putExtra("slot",6);
+
+                                startActivity(intent);
+                                finish();
+                            }
+                            catch (InterruptedException e)
+                            {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+
+
                 }
             }
         });
 
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (t1 != null) {
+            t1.stop();
+            t1.shutdown();
+        }
     }
 
 }

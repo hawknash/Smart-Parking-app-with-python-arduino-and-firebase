@@ -1,29 +1,48 @@
 package com.example.smartparking;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
+
 
 public class register extends AppCompatActivity {
 
@@ -34,6 +53,14 @@ public class register extends AppCompatActivity {
     DatabaseReference mdatabase;
     String Name, Email, Password;
     ProgressDialog mDialog;
+    ImageButton pic;
+    private Uri mImageUri,resultUri;
+    private StorageReference mStorage;
+    private static final int GALLERY_CODE=1;
+    UploadTask uploadTask;
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int REQUEST_TAKE_PHOTO = 1;
+    private static final int CAMERA_REQUEST_CODE=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +75,10 @@ public class register extends AppCompatActivity {
         password = (EditText) findViewById(R.id.editPassword);
         mRegisterbtn = (Button) findViewById(R.id.buttonRegister);
         mLoginPageBack = (TextView) findViewById(R.id.buttonLogin);
+        pic=(ImageButton)findViewById(R.id.imageButton);
 
         mAuth = FirebaseAuth.getInstance();
+        mStorage= FirebaseStorage.getInstance().getReference();
 
 
         mDialog = new ProgressDialog(this);
@@ -69,7 +98,70 @@ public class register extends AppCompatActivity {
             }
         });
 
+        pic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //  Intent galleryIntent=new Intent(Intent.ACTION_GET_CONTENT);
+                //     galleryIntent.setType("image/*");
+                //    startActivityForResult(galleryIntent,GALLERY_CODE);
+
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(intent, CAMERA_REQUEST_CODE);
+                }
+
+            }
+
+
+        });
+
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // if(requestCode == GALLERY_REQUEST && resultCode == RESULT_OK){
+        if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
+
+
+            mImageUri = data.getData();
+            pic.setImageURI(mImageUri);
+
+            CropImage.activity(mImageUri)
+                    .setAspectRatio(1,1)
+                    .setGuidelines(CropImageView.Guidelines.ON)
+                    .start(this);
+
+        }
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                resultUri = result.getUri();
+                pic.setImageURI(resultUri);
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
+        }
+
+        }
+
+
+ /*   @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode==GALLERY_CODE && resultCode==RESULT_OK){
+
+            mImageUri=data.getData();
+            pic.setImageURI(mImageUri);
+
+        }
+
+    } */
+
     /*    @Override
         public void onClick (View v){
             if (v == mRegisterbtn) {
@@ -80,10 +172,12 @@ public class register extends AppCompatActivity {
         }*/
 
 
+
         private void UserRegister () {
             Name = name.getText().toString().trim();
             Email = email.getText().toString().trim();
             Password = password.getText().toString().trim();
+
 
             if (TextUtils.isEmpty(Name)) {
                 Toast.makeText(register.this, "Enter Name", Toast.LENGTH_SHORT).show();
@@ -105,6 +199,8 @@ public class register extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
+                        final StorageReference filepath=mStorage.child("MBlog_images").child(resultUri.getLastPathSegment());
+                        uploadTask=filepath.putFile(resultUri);
                         sendEmailVerification();
                         mDialog.dismiss();
                         OnAuth(task.getResult().getUser());
@@ -157,6 +253,8 @@ public class register extends AppCompatActivity {
         public String getUserEmail () {
             return Email;
         }
+
+
 
     }
 

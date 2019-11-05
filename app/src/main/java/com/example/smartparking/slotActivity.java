@@ -4,21 +4,26 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class slotActivity extends AppCompatActivity {
     private TextView m,m1;
     private Button exit;
+    TextToSpeech t1;
     long time;
      int message;
      DatabaseReference mDatabaseReference,r;
@@ -43,9 +48,15 @@ public class slotActivity extends AppCompatActivity {
         m1.setText("In Time: "+currentDateandTime);
         time=System.currentTimeMillis()/1000;
 
+
+
+
+
+
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 mDatabase= FirebaseDatabase.getInstance();
                 mDatabaseReference=mDatabase.getReference("python-example-f6d0b");
                 mD=FirebaseDatabase.getInstance();
@@ -120,11 +131,19 @@ public class slotActivity extends AppCompatActivity {
         }
         Intent intent = new Intent(slotActivity.this, DashboardActivity.class);
 
-        // Sending Email to Dashboard Activity using intent.
+
 
 
         startActivity(intent);
         finish();
 
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (t1 != null) {
+            t1.stop();
+            t1.shutdown();
+        }
     }
 }

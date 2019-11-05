@@ -108,7 +108,7 @@
         android:layout_marginEnd="48dp"
         android:layout_marginRight="48dp"
         android:text="Slot Available"
-        android:background="@android:color/holo_blue_bright"
+        android:background="@android:color/holo_blue_dark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -131,17 +131,31 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Choose the empty Slots by clicking on it\n The rate per hour is: Rs 30"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button6"
         android:fontFamily="casual"
-        android:textSize="20sp"
+        android:text="Choose the empty Slots by clicking on it\n The rate per hour is: Rs 30"
         android:textAlignment="center"
         android:textColor="@android:color/black"
+        android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintVertical_bias="0.455" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.454"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button6" />
+
+    <Button
+        android:id="@+id/button8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Get Location"
+        android:textColor="#000000"
+
+        android:backgroundTint="@color/fui_transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintVertical_bias="0.692" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

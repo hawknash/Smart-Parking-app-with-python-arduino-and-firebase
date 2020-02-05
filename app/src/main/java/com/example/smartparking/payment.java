@@ -103,9 +103,7 @@ public class payment extends AppCompatActivity {
                             finish();
                         }
                         catch (InterruptedException e)
-                        {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
+                        {                            e.printStackTrace();
                         }
                     }
                 }).start();
